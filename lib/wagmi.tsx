@@ -1,13 +1,7 @@
 import '@rainbow-me/rainbowkit/styles.css';
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import { configureChains, createConfig, WagmiProvider } from 'wagmi';
+import { createConfig, http, WagmiProvider } from 'wagmi';
 import { base, baseSepolia } from 'wagmi/chains';
-import { publicProvider } from 'wagmi/providers/public';
-
-const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [baseSepolia, base],
-  [publicProvider()]
-);
 
 const { connectors } = getDefaultWallets({
   appName: 'Base Rewards Dashboard',
@@ -16,10 +10,12 @@ const { connectors } = getDefaultWallets({
 });
 
 const wagmiConfig = createConfig({
-  autoConnect: true,
+  chains: [baseSepolia, base],
   connectors,
-  publicClient,
-  webSocketPublicClient,
+  transports: {
+    [baseSepolia.id]: http(),
+    [base.id]: http(),
+  },
 });
 
 export function WagmiWrapper({ children }: { children: React.ReactNode }) {

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount, useBalance, useContractRead, useContractWrite, useWaitForTransaction } from 'wagmi';
+import { useAccount, useBalance, useContractRead, useContractWrite, useWaitForTransactionReceipt } from 'wagmi';
 import { rewardTokenAbi } from '@/lib/contracts';
 
 const contractAddress = process.env.NEXT_PUBLIC_REWARD_TOKEN_ADDRESS || '0x0000000000000000000000000000000000000000';
@@ -39,7 +39,7 @@ export default function Home() {
     functionName: 'claimReward',
     chainId: 84531,
   });
-  const claimTx = useWaitForTransaction({ hash: claimWrite.data?.hash, enabled: Boolean(claimWrite.data?.hash) });
+  const claimTx = useWaitForTransactionReceipt({ hash: claimWrite.data?.hash });
 
   const completedReward = useMemo(
     () => taskDefinitions.reduce((sum, task) => completedTasks.includes(task.id) ? sum + task.reward : sum, 0),
