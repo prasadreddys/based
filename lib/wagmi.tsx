@@ -3,6 +3,8 @@ import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { createConfig, http, WagmiProvider } from 'wagmi';
 import { base, baseSepolia } from 'wagmi/chains';
 
+// Wagmi v2 configuration for Base network
+
 const { connectors } = getDefaultWallets({
   appName: 'Base Rewards Dashboard',
   projectId: 'base-rewards-demo',
