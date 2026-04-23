@@ -1,6 +1,6 @@
 import '@rainbow-me/rainbowkit/styles.css';
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import { configureChains, createConfig, WagmiConfig } from 'wagmi';
+import { configureChains, createConfig, WagmiProvider } from 'wagmi';
 import { base, baseSepolia } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
@@ -23,5 +23,5 @@ const wagmiConfig = createConfig({
 });
 
 export function WagmiWrapper({ children }: { children: React.ReactNode }) {
-  return <WagmiConfig config={wagmiConfig}><RainbowKitProvider chains={chains}>{children}</RainbowKitProvider></WagmiConfig>;
+  return <WagmiProvider config={wagmiConfig}><RainbowKitProvider chains={chains}>{children}</RainbowKitProvider></WagmiProvider>;
 }
