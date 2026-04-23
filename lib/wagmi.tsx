@@ -6,7 +6,6 @@ import { base, baseSepolia } from 'wagmi/chains';
 const { connectors } = getDefaultWallets({
   appName: 'Base Rewards Dashboard',
   projectId: 'base-rewards-demo',
-  chains,
 });
 
 const wagmiConfig = createConfig({
@@ -19,5 +18,5 @@ const wagmiConfig = createConfig({
 });
 
 export function WagmiWrapper({ children }: { children: React.ReactNode }) {
-  return <WagmiProvider config={wagmiConfig}><RainbowKitProvider chains={chains}>{children}</RainbowKitProvider></WagmiProvider>;
+  return <WagmiProvider config={wagmiConfig}><RainbowKitProvider>{children}</RainbowKitProvider></WagmiProvider>;
 }

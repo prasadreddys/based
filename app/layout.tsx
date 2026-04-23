@@ -1,5 +1,5 @@
 import './globals.css';
-import { WagmiWrapper } from '@/lib/wagmi.tsx';
+import { WagmiWrapper } from '@/lib/wagmi';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount, useBalance, useContractRead, useContractWrite, useWaitForTransactionReceipt } from 'wagmi';
+import { useAccount, useBalance, useContractRead, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { rewardTokenAbi } from '@/lib/contracts';
 
 const contractAddress = process.env.NEXT_PUBLIC_REWARD_TOKEN_ADDRESS || '0x0000000000000000000000000000000000000000';
@@ -30,16 +30,13 @@ export default function Home() {
     abi: rewardTokenAbi,
     functionName: 'rewards',
     args: [address ?? '0x0000000000000000000000000000000000000000'],
-    enabled: Boolean(address),
+    query: {
+      enabled: Boolean(address),
+    },
     chainId: 84531,
   });
-  const claimWrite = useContractWrite({
-    address: contractAddress as `0x${string}`,
-    abi: rewardTokenAbi,
-    functionName: 'claimReward',
-    chainId: 84531,
-  });
-  const claimTx = useWaitForTransactionReceipt({ hash: claimWrite.data?.hash });
+  const claimWrite = useWriteContract();
+  const claimTx = useWaitForTransactionReceipt({ hash: claimWrite.data });
 
   const completedReward = useMemo(
     () => taskDefinitions.reduce((sum, task) => completedTasks.includes(task.id) ? sum + task.reward : sum, 0),
@@ -137,11 +134,16 @@ export default function Home() {
             </div>
             <button
               type="button"
-              disabled={!isConnected || !canClaim || claimWrite.isLoading}
-              onClick={() => claimWrite.write?.()}
+              disabled={!isConnected || !canClaim || claimWrite.isPending}
+              onClick={() => claimWrite.writeContract({
+                address: contractAddress as `0x${string}`,
+                abi: rewardTokenAbi,
+                functionName: 'claimReward',
+                chainId: 84531,
+              })}
               className="w-full rounded-3xl bg-sky-500 px-5 py-4 text-base font-semibold text-slate-950 transition hover:bg-sky-400 disabled:cursor-not-allowed disabled:bg-slate-700"
             >
-              {claimWrite.isLoading ? 'Submitting...' : 'Claim Reward'}
+              {claimWrite.isPending ? 'Submitting...' : 'Claim Reward'}
             </button>
             {claimStatus ? <p className="text-sm text-slate-300">{claimStatus}</p> : null}
             <div className="space-y-3 rounded-3xl border border-white/10 bg-slate-950/80 p-5">
